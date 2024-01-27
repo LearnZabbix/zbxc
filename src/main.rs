@@ -91,7 +91,8 @@ fn main() {
             let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();
             match client.get_hosts(&session,&request) {
                 Ok(hosts) => {
-//                    assert_eq!(hosts.len(), 1);
+		    //  assert_eq!(hosts.len(), 1);
+                    println!("host.len()= {:?}",hosts.len());
                     let host = hosts.first().unwrap();
                     // assert_eq!(&host.host,"Zabbix server")
                     println!("host: {:?}", host);
