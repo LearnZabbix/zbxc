@@ -9,7 +9,7 @@
 │   ├── functions.rs
 │   ├── hello.rs
 │   ├── main.rs
-│   └── test.rs
+│   └── tests.rs
 └── zbxc-dir-layout.txt
 
 1 directory, 11 files
