@@ -35,6 +35,11 @@ fn main() {
                 .about("CRU-D : show zabbix session id")
                 .arg(arg!([NAME])),
         )
+        .subcommand(
+            Command::new("check")
+                .about("check zabbix server status.")
+                .arg(arg!([NAME])),
+        )
         .get_matches();
 
     match matches.subcommand() {
@@ -99,7 +104,13 @@ fn main() {
                 rectangle.height,
                 rectangle.area()
             );
+        } //delete
 
+        Some(("check", sub_matches)) => {
+            println!(
+                " check was used, name is: {:?}",
+                sub_matches.get_one::<String>("NAME")
+            );
             let http_client = ClientBuilder::new()
                 .danger_accept_invalid_certs(false) // Set true if you're using self-signed certificates.
                 .build()
@@ -115,7 +126,14 @@ fn main() {
                     panic!("unexpected error")
                 }
             }
-        } //delete
+            match client.get_api_info() {
+                Ok(info) => println!("Zabbix API Server Version Info: {info}"),
+                Err(e) => {
+                    eprintln!("error: {}", e);
+                    panic!("unexpected error")
+                }
+            }
+        } // check
 
         _ => unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
     }
