@@ -6,7 +6,7 @@ description = "zbbix cli in Rust using zabbix-api-rs framework"
 license = "Apache-2.0"
 homepage = "https://loco.rs/"
 documentation = "https://docs.rs/zabbix-api/"
-authors = ["T.J. Yang <tjyang2001@gmail.com>"]
+authors = ["https://github.com/LearnZabbix/zbxc"]
 repository = "https://github.com/LearnZabbix/zbxc"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

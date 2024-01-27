@@ -118,29 +118,8 @@ pull:
 	git pull
 install:
 	cargo install  --force --path .
-	ls -lrt ${HOME}/.cargo/bin
+	ls -lrt ${HOME}/.cargo/bin | tail -3
 
-cmk-agent-ctl:
-	(cd cmk-agent-ctl && cargo install  --force --path . )
-cmd-demo:
-	(cd cmd-demo && ./cmd-install.sh)
-
-cmkc:
-	(cd cmkc && cargo install  --force --path . )
-
-cmkrest:
-	(cd cmkrest &&  cargo install  --force --path .)
-
-install2:
-	ls -lrt ${HOME}/.cargo/bin
-
-installcmk:
-	cd cmk    && cargo install  --force --path .
-	ls -lrt ${HOME}/.cargo/bin | tail -10
-
-installsqld:
-	cd sqld   && make install 
-	ls -lrt ${HOME}/.cargo/bin | tail -10
 
 clip:
 	cargo clippy
@@ -156,10 +135,12 @@ doc:
 	rustdoc README.md --crate-name docs
 	cargo doc
 	ls target/doc doc
-hello:
-	rm -f ${HOME}/.cargo/bin/hello
-	(cd docs/examples/hello && cargo install --path . -f )
+zbxc:
+	rm -f ${HOME}/.cargo/bin/zbxc
+	(cargo install --path . -f )
 	ls -lrt ${HOME}/.cargo/bin | tail -3
+	zbxc
+
 sdockerup:
 	 docker-compose up -d
 dockerdown:
@@ -170,11 +151,14 @@ docker:
 itest:
 	ncat -zv localhost 3080
 	./run-integration-tests.sh
+
+delbranch: status
+	git branch -D "$(call args, remoteBranchName)" && git push origin --delete "$(call args, remoteBranchName)"
 help:
 	@echo "Usage: make <target> <argument>"
 	@echo
 	@echo "Available targets are:"
-	@echo "  hello                  helloworld example"
+	@echo "  zbxc                  helloworld example"
 	@echo "  pdf                    Generate selected files in pdf and copy into ./docs"
 	@echo "  allpdf                 Generate selected files in pdf and copy into vmware hgfs"
 	@echo "  tests                  build and test run"
