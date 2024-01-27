@@ -2,7 +2,7 @@ use clap::{arg, command, Command};
 mod classes;
 mod functions;
 mod hello;
-mod test;
+mod tests;
 
 fn main() {
     let matches = command!() // requires clap `cargo` feature in Cargo.toml
@@ -51,6 +51,7 @@ fn main() {
                 "'myapp retrieve' was used, name is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
+            crate::functions::hello_world();
             let result = functions::add(5, 3);
             println!("Sum: {}", result);
             let triangle = classes::Triangle {
@@ -79,6 +80,8 @@ fn main() {
                 "'myapp delete' was used, name is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
+            let name = String::from("Rusty");
+            crate::functions::greeting(name);
             let rectangle = classes::Rectangle {
                 width: 10.0,
                 height: 5.0,

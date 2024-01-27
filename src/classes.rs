@@ -1,15 +1,7 @@
+// Rectangle Class
 pub struct Rectangle {
     /// Rectangle classes with width and hight atrribute.
     pub width: f64,
-    pub height: f64,
-}
-
-pub struct Circle {
-    pub radius: f64,
-}
-
-pub struct Triangle {
-    pub base: f64,
     pub height: f64,
 }
 
@@ -18,11 +10,19 @@ impl Rectangle {
         self.width * self.height
     }
 }
-
+// Circle Class
+pub struct Circle {
+    pub radius: f64,
+}
 impl Circle {
     pub fn circumference(&self) -> f64 {
         2.0 * std::f64::consts::PI * self.radius
     }
+}
+// Triangle class
+pub struct Triangle {
+    pub base: f64,
+    pub height: f64,
 }
 
 impl Triangle {
