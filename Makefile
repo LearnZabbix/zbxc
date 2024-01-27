@@ -89,8 +89,19 @@ tree: clean
 testslist:
 	cargo test -- --list
 tests:
-	cargo test  -- test::greeting_test
-	cargo test  -- test::hello_world_test
+	cargo test  -- client::v6::tests::create_host_group_and_host   
+	cargo test  -- client::v6::tests::create_item 		     
+	cargo test  -- client::v6::tests::create_trigger 		     
+	cargo test  -- client::v6::tests::get_api_info 		     
+	cargo test  -- client::v6::tests::create_web_scenario 	     
+	cargo test  -- client::v6::tests::get_hosts_test 		     
+	cargo test  -- client::v6::tests::get_items_test 		     
+	cargo test  -- client::v6::tests::get_host_groups_test 	     
+	cargo test  -- client::v6::tests::get_triggers_test 	     
+	cargo test  -- client::v6::tests::raw_api_call_test 	     
+	cargo test  -- client::v6::tests::get_webscenarios_test 	     
+	cargo test  -- client::v6::tests::session_should_be_returned   
+
 
 # enable makefile to accept argument after command
 #https://stackoverflow.com/questions/6273608/how-to-pass-argument-to-makefile-from-command-line
@@ -100,7 +111,7 @@ args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 	@:
 
 status:
-	git status
+	git status && git branch
 commit:
 	git commit -am "$(call args, Automated commit message without details, Please read the git diff)"  && git push
 pull:
@@ -147,8 +158,18 @@ doc:
 	ls target/doc doc
 hello:
 	rm -f ${HOME}/.cargo/bin/hello
-	cargo install --path . -f 
+	(cd docs/examples/hello && cargo install --path . -f )
 	ls -lrt ${HOME}/.cargo/bin | tail -3
+sdockerup:
+	 docker-compose up -d
+dockerdown:
+	 docker-compose down
+docker:
+	docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}' | egrep 'zabbix|NAMES'
+
+itest:
+	ncat -zv localhost 3080
+	./run-integration-tests.sh
 help:
 	@echo "Usage: make <target> <argument>"
 	@echo
