@@ -8,15 +8,20 @@ use std::collections::HashMap;
 // use zabbix_api::client::post::send_post_request;
 use zabbix_api::client::ZabbixApiClient;
 // use zabbix_api::error::ZabbixApiError;
-use zabbix_api::host::create::{
-    CreateHostGroupRequest, CreateHostGroupResponse, CreateHostRequest, CreateHostResponse,
-};
+//use zabbix_api::host::create::{
+//    CreateHostGroupRequest, CreateHostGroupResponse, CreateHostRequest, CreateHostResponse,
+//};
+
+use zabbix_api::host::create::{CreateHostGroupRequest, CreateHostRequest};
 use zabbix_api::host::{ZabbixHost, ZabbixHostGroup};
-use zabbix_api::item::create::{CreateItemRequest, CreateItemResponse};
+//use zabbix_api::item::create::{CreateItemRequest, CreateItemResponse};
+use zabbix_api::item::create::CreateItemRequest;
 // use zabbix_api::item::ZabbixItem;
-use zabbix_api::trigger::create::{CreateTriggerRequest, CreateTriggerResponse};
-use zabbix_api::trigger::ZabbixTrigger;
-use zabbix_api::webscenario::create::{CreateWebScenarioRequest, CreateWebScenarioResponse};
+// use zabbix_api::trigger::create::{CreateTriggerRequest, CreateTriggerResponse};
+use zabbix_api::trigger::create::CreateTriggerRequest;
+// use zabbix_api::trigger::ZabbixTrigger;
+// use zabbix_api::webscenario::create::{CreateWebScenarioRequest, CreateWebScenarioResponse};
+use zabbix_api::webscenario::create::CreateWebScenarioRequest;
 // use zabbix_api::webscenario::ZabbixWebScenario;
 
 // const JSON_RPC_VERSION: &str = "2.0";

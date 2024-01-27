@@ -148,6 +148,10 @@ dockerdown:
 docker:
 	docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}' | egrep 'zabbix|NAMES'
 
+cartest:
+	ncat -zv localhost 3080
+	cargo test
+
 itest:
 	ncat -zv localhost 3080
 	./run-integration-tests.sh
