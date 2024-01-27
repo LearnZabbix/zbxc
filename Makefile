@@ -117,6 +117,7 @@ commit:
 pull:
 	git pull
 install:
+	rm -f ${HOME}/.cargo/bin/zbxc
 	cargo install  --force --path .
 	ls -lrt ${HOME}/.cargo/bin | tail -3
 

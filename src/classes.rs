@@ -19,14 +19,15 @@ impl Circle {
         2.0 * std::f64::consts::PI * self.radius
     }
 }
-// Triangle class
-pub struct Triangle {
-    pub base: f64,
-    pub height: f64,
-}
-
-impl Triangle {
-    pub fn area(&self) -> f64 {
-        0.5 * self.base * self.height
-    }
-}
+//// Triangle class
+//pub struct Triangle {
+//    pub base: f64,
+//    pub height: f64,
+//}
+//
+//impl Triangle {
+//    pub fn area(&self) -> f64 {
+//        0.5 * self.base * self.height
+//    }
+//}
+//

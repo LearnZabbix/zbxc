@@ -8,6 +8,12 @@ mod hello;
 use reqwest::blocking::ClientBuilder;
 use zabbix_api::client::v6::ZabbixApiV6Client;
 use zabbix_api::client::ZabbixApiClient;
+//use zabbix_api::host::get::{GetHostGroupsRequest, GetHostsRequest};
+use zabbix_api::host::get::GetHostsRequest;
+use serde::Serialize;
+const DEFAULT_URL: &str = "http://localhost:3080/api_jsonrpc.php";
+const DEFAULT_ADMIN: &str = "Admin";
+const DEFAULT_PASSWORD: &str = "zabbix";
 
 fn main() {
     let matches = command!() 
@@ -63,23 +69,39 @@ fn main() {
 
         Some(("retrieve", sub_matches)) => {
             println!(
-                "'myapp retrieve' Command was used, Option is: {:?}",
+                "'retrieve' Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
             crate::functions::hello_world();
-            let result = functions::add(5, 3);
-            println!("Sum: {}", result);
-            let triangle = classes::Triangle {
-                base: 8.0,
-                height: 4.0,
+//            let hostname = String::from(sub_matches.get_one::<String>("NAME").unwrap());
+            let http_client = ClientBuilder::new()
+                .danger_accept_invalid_certs(false)
+                .build()
+                .unwrap();
+            let client = ZabbixApiV6Client::new(http_client, &DEFAULT_URL);
+             #[derive(Serialize)]
+            struct Filter {
+                pub host: Vec<String>,
+            }
+            let request = GetHostsRequest {
+                filter: Filter {
+                    host: vec!["Zabbix server".to_string()]
+                },
             };
-            println!(
-                "Triangle: base = {}, height = {}, area = {}",
-                triangle.base,
-                triangle.height,
-                triangle.area()
-            );
-        } // retrie
+            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();	    
+            match client.get_hosts(&session,&request) {
+                Ok(hosts) => {
+                    assert_eq!(hosts.len(), 1);
+                    let host = hosts.first().unwrap();
+                    assert_eq!(&host.host,"Zabbix server")
+                }
+                Err(e) => {
+                    eprintln!("host get error: {}", e);
+                    panic!("{}", e)
+                }
+            }
+            crate::functions::hello_world();	    
+        } // retrieve
 
         Some(("update", sub_matches)) => {
             println!(
@@ -115,16 +137,18 @@ fn main() {
                 "check Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("URL")
             );
-
+//            let _ = functions::do_pings();
             println!("check Command was used, Option is: {:?}", &url);
             let http_client = ClientBuilder::new()
-                .danger_accept_invalid_certs(true)
+                .danger_accept_invalid_certs(false)
                 .build()
                 .unwrap();
 
             let client = ZabbixApiV6Client::new(http_client, &url);
-
-            match client.get_auth_session("Admin", "zabbix") {
+	    //            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();
+            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD);	    
+	    //            match client.get_auth_session("Admin", "zabbix") {
+            match session {
                 Ok(session) => println!("session: {session}"),
                 Err(e) => {
                     eprintln!("error: {}", e);
@@ -138,6 +162,7 @@ fn main() {
                     panic!("unexpected error")
                 }
             }
+
         } // check
 
         _ => unreachable!("Exhausted list of Commands and Command_required prevents `None`"),
