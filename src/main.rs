@@ -32,56 +32,64 @@ fn main() {
 
     match matches.subcommand() {
         //  Some(("create", sub_matches)) => hello::hello(),
-        Some(("create", sub_matches)) => println!(
-            "'myapp create' was used, name is: {:?}",
-            sub_matches.get_one::<String>("NAME")
-        ),
-        Some(("retrieve", sub_matches)) => println!(
-            "'myapp retrieve' was used, name is: {:?}",
-            sub_matches.get_one::<String>("NAME")
-        ),
-        Some(("update", sub_matches)) => println!(
-            "'myapp update' was used, name is: {:?}",
-            sub_matches.get_one::<String>("NAME")
-        ),
-        Some(("delete", sub_matches)) => println!(
-            "'myapp delete' was used, name is: {:?}",
-            sub_matches.get_one::<String>("NAME")
-        ),
+        Some(("create", sub_matches)) => {
+            println!(
+                "'myapp create' was used, name is: {:?}",
+                sub_matches.get_one::<String>("NAME")
+            );
+            hello::hello();
+            let circle = classes::Circle { radius: 3.0 };
+            println!(
+                "Circle: radius = {}, circumference = {}",
+                circle.radius,
+                circle.circumference()
+            );
+        } // create
+        Some(("retrieve", sub_matches)) => {
+            println!(
+                "'myapp retrieve' was used, name is: {:?}",
+                sub_matches.get_one::<String>("NAME")
+            );
+            let result = functions::add(5, 3);
+            println!("Sum: {}", result);
+            let triangle = classes::Triangle {
+                base: 8.0,
+                height: 4.0,
+            };
+            println!(
+                "Triangle: base = {}, height = {}, area = {}",
+                triangle.base,
+                triangle.height,
+                triangle.area()
+            );
+        } // retrie
+
+        Some(("update", sub_matches)) => {
+            println!(
+                "'myapp update' was used, name is: {:?}",
+                sub_matches.get_one::<String>("NAME")
+            );
+            let result = functions::multiply(5, 3);
+            println!("Product: {}", result);
+        } // update
+
+        Some(("delete", sub_matches)) => {
+            println!(
+                "'myapp delete' was used, name is: {:?}",
+                sub_matches.get_one::<String>("NAME")
+            );
+            let rectangle = classes::Rectangle {
+                width: 10.0,
+                height: 5.0,
+            };
+            println!(
+                "Rectangle: width = {}, height = {}, area = {}",
+                rectangle.width,
+                rectangle.height,
+                rectangle.area()
+            );
+        } //delete
 
         _ => unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
     }
-    hello::hello();
-    let result = functions::add(5, 3);
-    println!("Sum: {}", result);
-
-    let result = functions::multiply(5, 3);
-    println!("Product: {}", result);
-
-    let rectangle = classes::Rectangle {
-        width: 10.0,
-        height: 5.0,
-    };
-    let circle = classes::Circle { radius: 3.0 };
-    let triangle = classes::Triangle {
-        base: 8.0,
-        height: 4.0,
-    };
-    println!(
-        "Rectangle: width = {}, height = {}, area = {}",
-        rectangle.width,
-        rectangle.height,
-        rectangle.area()
-    );
-    println!(
-        "Circle: radius = {}, circumference = {}",
-        circle.radius,
-        circle.circumference()
-    );
-    println!(
-        "Triangle: base = {}, height = {}, area = {}",
-        triangle.base,
-        triangle.height,
-        triangle.area()
-    );
 }
