@@ -10,7 +10,7 @@ use zabbix_api::client::v6::ZabbixApiV6Client;
 use zabbix_api::client::ZabbixApiClient;
 
 fn main() {
-    let matches = command!() // requires clap `cargo` feature in Cargo.toml
+    let matches = command!() 
         .help_template(
             "{before-help}{name}-{version} {about-with-newline}{author-with-newline} 
 {usage-heading} [Options] [Commands] [Options] 
@@ -40,7 +40,7 @@ fn main() {
         .subcommand(
             Command::new("check")
                 .about(
-                    "check zabbix server status.\n Ex: check http://localhost:3080/api_jsonrpc.php",
+                    "check zabbix server status.\n Ex: check http://localhost:3080/api_jsonrpc.php \n Ex: check https://zabbix.test.com/zabbix/api_jsonrpc.php",
                 )
                 .arg(arg!([URL])),
         )
@@ -118,7 +118,7 @@ fn main() {
 
             println!("check Command was used, Option is: {:?}", &url);
             let http_client = ClientBuilder::new()
-                .danger_accept_invalid_certs(false)
+                .danger_accept_invalid_certs(true)
                 .build()
                 .unwrap();
 
