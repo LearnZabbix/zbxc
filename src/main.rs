@@ -72,14 +72,7 @@ fn main() {
                 "'retrieve' Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
-            crate::functions::hello_world();
-//            let hostname = String::from(sub_matches.get_one::<String>("NAME").unwrap());
-            let http_client = ClientBuilder::new()
-                .danger_accept_invalid_certs(false)
-                .build()
-                .unwrap();
-            let client = ZabbixApiV6Client::new(http_client, &DEFAULT_URL);
-             #[derive(Serialize)]
+            #[derive(Serialize)]
             struct Filter {
                 pub host: Vec<String>,
             }
@@ -88,12 +81,20 @@ fn main() {
                     host: vec!["Zabbix server".to_string()]
                 },
             };
-            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();	    
+            crate::functions::hello_world();
+//            let hostname = String::from(sub_matches.get_one::<String>("NAME").unwrap());
+            let http_client = ClientBuilder::new()
+                .danger_accept_invalid_certs(false)
+                .build()
+                .unwrap();
+            let client = ZabbixApiV6Client::new(http_client, DEFAULT_URL);
+            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();
             match client.get_hosts(&session,&request) {
                 Ok(hosts) => {
-                    assert_eq!(hosts.len(), 1);
+//                    assert_eq!(hosts.len(), 1);
                     let host = hosts.first().unwrap();
-                    assert_eq!(&host.host,"Zabbix server")
+                    // assert_eq!(&host.host,"Zabbix server")
+                    println!("host: {:?}", host);
                 }
                 Err(e) => {
                     eprintln!("host get error: {}", e);
@@ -145,9 +146,7 @@ fn main() {
                 .unwrap();
 
             let client = ZabbixApiV6Client::new(http_client, &url);
-	    //            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();
             let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD);	    
-	    //            match client.get_auth_session("Admin", "zabbix") {
             match session {
                 Ok(session) => println!("session: {session}"),
                 Err(e) => {
