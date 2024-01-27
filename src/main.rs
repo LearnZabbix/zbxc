@@ -45,6 +45,7 @@ fn main() {
                 circle.circumference()
             );
         } // create
+
         Some(("retrieve", sub_matches)) => {
             println!(
                 "'myapp retrieve' was used, name is: {:?}",
