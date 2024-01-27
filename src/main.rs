@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use clap::{arg, command, Command};
 mod classes;
 mod functions;
@@ -5,7 +8,6 @@ mod hello;
 use reqwest::blocking::ClientBuilder;
 use zabbix_api::client::v6::ZabbixApiV6Client;
 use zabbix_api::client::ZabbixApiClient;
-mod tests;
 
 fn main() {
     let matches = command!() // requires clap `cargo` feature in Cargo.toml
@@ -43,13 +45,12 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
-        //  Some(("create", sub_matches)) => hello::hello(),
         Some(("create", sub_matches)) => {
             println!(
-                "'myapp create' was used, name is: {:?}",
+                "'myapp create' Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
-            hello::hello();
+            hello::hello(); // from hello.rs
             let circle = classes::Circle { radius: 3.0 };
             println!(
                 "Circle: radius = {}, circumference = {}",
@@ -60,7 +61,7 @@ fn main() {
 
         Some(("retrieve", sub_matches)) => {
             println!(
-                "'myapp retrieve' was used, name is: {:?}",
+                "'myapp retrieve' Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
             crate::functions::hello_world();
@@ -80,7 +81,7 @@ fn main() {
 
         Some(("update", sub_matches)) => {
             println!(
-                "'myapp update' was used, name is: {:?}",
+                "'myapp update' Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
             let result = functions::multiply(5, 3);
@@ -89,7 +90,7 @@ fn main() {
 
         Some(("delete", sub_matches)) => {
             println!(
-                "'myapp delete' was used, name is: {:?}",
+                "'myapp delete' Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
             let name = String::from("Rusty");
@@ -108,7 +109,7 @@ fn main() {
 
         Some(("check", sub_matches)) => {
             println!(
-                " check was used, name is: {:?}",
+                "check Command was used, Option is: {:?}",
                 sub_matches.get_one::<String>("NAME")
             );
             let http_client = ClientBuilder::new()
@@ -135,6 +136,6 @@ fn main() {
             }
         } // check
 
-        _ => unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
+        _ => unreachable!("Exhausted list of Commands and Command_required prevents `None`"),
     }
 }
