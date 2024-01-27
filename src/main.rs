@@ -2,6 +2,9 @@ use clap::{arg, command, Command};
 mod classes;
 mod functions;
 mod hello;
+use reqwest::blocking::ClientBuilder;
+use zabbix_api::client::v6::ZabbixApiV6Client;
+use zabbix_api::client::ZabbixApiClient;
 mod tests;
 
 fn main() {
@@ -27,7 +30,11 @@ fn main() {
                 .arg(arg!([NAME])),
         )
         .subcommand(Command::new("update").about("CR-U-D ...").arg(arg!([NAME])))
-        .subcommand(Command::new("delete").about("CRU-D ...").arg(arg!([NAME])))
+        .subcommand(
+            Command::new("delete")
+                .about("CRU-D : show zabbix session id")
+                .arg(arg!([NAME])),
+        )
         .get_matches();
 
     match matches.subcommand() {
@@ -92,6 +99,22 @@ fn main() {
                 rectangle.height,
                 rectangle.area()
             );
+
+            let http_client = ClientBuilder::new()
+                .danger_accept_invalid_certs(false) // Set true if you're using self-signed certificates.
+                .build()
+                .unwrap();
+
+            let client =
+                ZabbixApiV6Client::new(http_client, "http://localhost:3080/api_jsonrpc.php");
+
+            match client.get_auth_session("Admin", "zabbix") {
+                Ok(session) => println!("session: {session}"),
+                Err(e) => {
+                    eprintln!("error: {}", e);
+                    panic!("unexpected error")
+                }
+            }
         } //delete
 
         _ => unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
