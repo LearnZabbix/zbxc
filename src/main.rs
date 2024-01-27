@@ -39,8 +39,10 @@ fn main() {
         )
         .subcommand(
             Command::new("check")
-                .about("check zabbix server status.")
-                .arg(arg!([NAME])),
+                .about(
+                    "check zabbix server status.\n Ex: check http://localhost:3080/api_jsonrpc.php",
+                )
+                .arg(arg!([URL])),
         )
         .get_matches();
 
@@ -108,17 +110,19 @@ fn main() {
         } //delete
 
         Some(("check", sub_matches)) => {
+            let url = String::from(sub_matches.get_one::<String>("URL").unwrap());
             println!(
                 "check Command was used, Option is: {:?}",
-                sub_matches.get_one::<String>("NAME")
+                sub_matches.get_one::<String>("URL")
             );
+
+            println!("check Command was used, Option is: {:?}", &url);
             let http_client = ClientBuilder::new()
-                .danger_accept_invalid_certs(false) // Set true if you're using self-signed certificates.
+                .danger_accept_invalid_certs(false)
                 .build()
                 .unwrap();
 
-            let client =
-                ZabbixApiV6Client::new(http_client, "http://localhost:3080/api_jsonrpc.php");
+            let client = ZabbixApiV6Client::new(http_client, &url);
 
             match client.get_auth_session("Admin", "zabbix") {
                 Ok(session) => println!("session: {session}"),
