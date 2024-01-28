@@ -42,7 +42,7 @@ fn main() {
         .subcommand(
             Command::new("create")
                 .about("C-RUD: to create a file.\n Ex: hello create test.txt")
-                .arg(arg!([NAME])),
+                .arg(arg!([HOSTNAME])),
         )
         .subcommand(
             Command::new("retrieve")
@@ -68,7 +68,7 @@ fn main() {
         Some(("create", sub_matches)) => {
             println!(
                 "'myapp create' Command was used, Option is: {:?}",
-                sub_matches.get_one::<String>("NAME")
+                sub_matches.get_one::<String>("HOSTNAME")
             );
             hello::hello(); // from hello.rs
             let circle = classes::Circle { radius: 3.0 };
@@ -77,57 +77,6 @@ fn main() {
                 circle.radius,
                 circle.circumference()
             );
-	    // https://www.zabbix.com/documentation/6.0/en/manual/api/reference/host/create
-	    // create requests json using json.
-            //	        "jsonrpc": "2.0",
-            //    "method": "host.create",
-            //    "params": {
-            //        "host": "Linux server",
-            //        "interfaces": [
-            //            {
-            //                "type": 1,
-            //                "main": 1,
-            //                "useip": 1,
-            //                "ip": "192.168.3.1",
-            //                "dns": "",
-            //                "port": "10050"
-            //            }
-            //        ],
-            //        "groups": [
-            //            {
-            //                "groupid": "50"
-            //            }
-            //        ],
-            //        "tags": [
-            //            {
-            //                "tag": "Host name",
-            //                "value": "Linux server"
-            //            }
-            //        ],
-            //        "templates": [
-            //            {
-            //                "templateid": "20045"
-            //            }
-            //        ],
-            //        "macros": [
-            //            {
-            //                "macro": "{$USER_ID}",
-            //                "value": "123321"
-            //            },
-            //            {
-            //                "macro": "{$USER_LOCATION}",
-            //                "value": "0:0:0",
-            //                "description": "latitude, longitude and altitude coordinates"
-            //            }
-            //        ],
-            //        "inventory_mode": 0,
-            //        "inventory": {
-            //            "macaddress_a": "01234",
-            //            "macaddress_b": "56768"
-            //        }
-            //    },
-            //    "auth": "038e1d7b1735c6a5436ee9eae095879e",
-            //    "id": 1
 	    // let http_client = Client::new();
             let http_client = ClientBuilder::new().danger_accept_invalid_certs(false).build().unwrap();
             let client = ZabbixApiV6Client::new(http_client, DEFAULT_URL);
@@ -139,7 +88,8 @@ fn main() {
 	    };
 	    let host_groups = client.get_host_groups(&session, &request).unwrap();
 	    let host_group = host_groups.first().unwrap().clone();
-	    let host_name = "test01.test.net".to_string();
+	    // let host_name = "test01.test.net".to_string();
+	    let host_name = String::from(sub_matches.get_one::<String>("HOSTNAME").unwrap());
             let request = CreateHostRequest {
                 host: host_name,
                 groups: vec![host_group],
@@ -150,18 +100,13 @@ fn main() {
                 inventory_mode: 0,
                 inventory: Default::default(),
             };
-	    
-//            match client.create_host(&session, &request).unwrap() {
-                Ok(client.create_host(&session, &request).unwrap()) => {
-                    println!("host.len()= {:?}",hosts.len());
-                    let host = hosts.first().unwrap();
-                    println!("host: {:?} created", host);
-                }
-                Err(e) => {
-                    eprintln!("host create error: {}", e);
-                    panic!("{}", e)
-                }
-//	    }	    
+	    client.create_host(&session, &request).unwrap();
+	    //           if client.create_host(&session, &request).unwrap().is_ok() {
+//           if client.create_host(&session, &request) {
+//	         println!("host: {:?} created.", host_name);
+//           } else {
+//	         println!("host: {:?} failed.", host_name);
+//            }
         } // create
 
         Some(("retrieve", sub_matches)) => {
@@ -279,3 +224,59 @@ fn main() {
         _ => unreachable!("Exhausted list of Commands and Command_required prevents `None`"),
     }
 }
+
+
+
+
+
+	    // https://www.zabbix.com/documentation/6.0/en/manual/api/reference/host/create
+	    // create requests json using json.
+            //	        "jsonrpc": "2.0",
+            //    "method": "host.create",
+            //    "params": {
+            //        "host": "Linux server",
+            //        "interfaces": [
+            //            {
+            //                "type": 1,
+            //                "main": 1,
+            //                "useip": 1,
+            //                "ip": "192.168.3.1",
+            //                "dns": "",
+            //                "port": "10050"
+            //            }
+            //        ],
+            //        "groups": [
+            //            {
+            //                "groupid": "50"
+            //            }
+            //        ],
+            //        "tags": [
+            //            {
+            //                "tag": "Host name",
+            //                "value": "Linux server"
+            //            }
+            //        ],
+            //        "templates": [
+            //            {
+            //                "templateid": "20045"
+            //            }
+            //        ],
+            //        "macros": [
+            //            {
+            //                "macro": "{$USER_ID}",
+            //                "value": "123321"
+            //            },
+            //            {
+            //                "macro": "{$USER_LOCATION}",
+            //                "value": "0:0:0",
+            //                "description": "latitude, longitude and altitude coordinates"
+            //            }
+            //        ],
+            //        "inventory_mode": 0,
+            //        "inventory": {
+            //            "macaddress_a": "01234",
+            //            "macaddress_b": "56768"
+            //        }
+            //    },
+            //    "auth": "038e1d7b1735c6a5436ee9eae095879e",
+            //    "id": 1
