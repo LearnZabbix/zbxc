@@ -9,12 +9,23 @@ use reqwest::blocking::ClientBuilder;
 use zabbix_api::client::v6::ZabbixApiV6Client;
 use zabbix_api::client::ZabbixApiClient;
 //use zabbix_api::host::get::{GetHostGroupsRequest, GetHostsRequest};
-use zabbix_api::host::create::{CreateHostRequest,CreateHostGroupResponse};
+//use zabbix_api::host::create::{CreateHostRequest,CreateHostGroupResponse};
+use zabbix_api::host::create::CreateHostRequest;
 use zabbix_api::host::get::GetHostsRequest;
 use serde::Serialize;
 const DEFAULT_URL: &str = "http://localhost:3080/api_jsonrpc.php";
 const DEFAULT_ADMIN: &str = "Admin";
 const DEFAULT_PASSWORD: &str = "zabbix";
+
+// use reqwest::blocking::Client;
+//use zabbix_api::host::get::{GetHostGroupsRequest, GetHostsRequest};
+use zabbix_api::host::get::GetHostGroupsRequest;
+//use serde::Serialize;
+//use zabbix_api::client::v6::ZabbixApiV6Client;
+//use zabbix_api::client::ZabbixApiClient;
+use zabbix_api::ZABBIX_EXTEND_PROPERTY_VALUE;
+use std::collections::HashMap;
+//use fake::{Fake, Faker};
 
 fn main() {
     let matches = command!() 
@@ -66,98 +77,91 @@ fn main() {
                 circle.radius,
                 circle.circumference()
             );
-////	    // https://www.zabbix.com/documentation/6.0/en/manual/api/reference/host/create
-////	    // create requests json using json.
-////            //	        "jsonrpc": "2.0",
-////            //    "method": "host.create",
-////            //    "params": {
-////            //        "host": "Linux server",
-////            //        "interfaces": [
-////            //            {
-////            //                "type": 1,
-////            //                "main": 1,
-////            //                "useip": 1,
-////            //                "ip": "192.168.3.1",
-////            //                "dns": "",
-////            //                "port": "10050"
-////            //            }
-////            //        ],
-////            //        "groups": [
-////            //            {
-////            //                "groupid": "50"
-////            //            }
-////            //        ],
-////            //        "tags": [
-////            //            {
-////            //                "tag": "Host name",
-////            //                "value": "Linux server"
-////            //            }
-////            //        ],
-////            //        "templates": [
-////            //            {
-////            //                "templateid": "20045"
-////            //            }
-////            //        ],
-////            //        "macros": [
-////            //            {
-////            //                "macro": "{$USER_ID}",
-////            //                "value": "123321"
-////            //            },
-////            //            {
-////            //                "macro": "{$USER_LOCATION}",
-////            //                "value": "0:0:0",
-////            //                "description": "latitude, longitude and altitude coordinates"
-////            //            }
-////            //        ],
-////            //        "inventory_mode": 0,
-////            //        "inventory": {
-////            //            "macaddress_a": "01234",
-////            //            "macaddress_b": "56768"
-////            //        }
-////            //    },
-////            //    "auth": "038e1d7b1735c6a5436ee9eae095879e",
-////            //    "id": 1
-////            //}
-////            #[derive(Serialize)]
-////            struct Host           {pub host: Vec<String>,}
-////            struct Interfaces     {pub interface: Vec<String>,}
-////            struct Groups         {pub groups: Vec<String>,}
-////            struct Tags           {pub tags: Vec<String>,}
-////            struct Templates      {pub templates: Vec<String>,}
-////            struct Macros         {pub macros: Vec<String>,}
-////	    struct InventoryMode  {pub inventory_mode: Vec<String>,}
-////            struct Inventory      {pub inventory: Vec<String>,}
-////            let request = CreateHostRequest {
-////                host: "test01".to_owned(),
-////                interface: Interfaces {vec!["Zabbix server".to_string()]},
-////                groups: Vec<String>,
-////                tags: Vec<String>,
-////                templates: Vec<String>,
-////                macros: Vec<String>,
-////	        inventory_mode: 0 ,
-////                inventory: Inventory {vec!["macaddress_a","macaddressb"]}
-////            };
-////            crate::functions::hello_world();
-//////            let hostname = String::from(sub_matches.get_one::<String>("NAME").unwrap());
-////            let http_client = ClientBuilder::new()
-////                .danger_accept_invalid_certs(false)
-////                .build()
-////                .unwrap();
-////            let client = ZabbixApiV6Client::new(http_client, DEFAULT_URL);
-////            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();
-////            match client.get_hosts(&session,&request) {
-////                Ok(hosts) => {
-////		    //  assert_eq!(hosts.len(), 1);
-////                    println!("host.len()= {:?}",hosts.len());
-////                    let host = hosts.first().unwrap();
-////                    // assert_eq!(&host.host,"Zabbix server")
-////                    println!("host: {:?}", host);
-////                }
-////                Err(e) => {
-////                    eprintln!("host get error: {}", e);
-////                    panic!("{}", e)
-////                }
-////            }
+	    // https://www.zabbix.com/documentation/6.0/en/manual/api/reference/host/create
+	    // create requests json using json.
+            //	        "jsonrpc": "2.0",
+            //    "method": "host.create",
+            //    "params": {
+            //        "host": "Linux server",
+            //        "interfaces": [
+            //            {
+            //                "type": 1,
+            //                "main": 1,
+            //                "useip": 1,
+            //                "ip": "192.168.3.1",
+            //                "dns": "",
+            //                "port": "10050"
+            //            }
+            //        ],
+            //        "groups": [
+            //            {
+            //                "groupid": "50"
+            //            }
+            //        ],
+            //        "tags": [
+            //            {
+            //                "tag": "Host name",
+            //                "value": "Linux server"
+            //            }
+            //        ],
+            //        "templates": [
+            //            {
+            //                "templateid": "20045"
+            //            }
+            //        ],
+            //        "macros": [
+            //            {
+            //                "macro": "{$USER_ID}",
+            //                "value": "123321"
+            //            },
+            //            {
+            //                "macro": "{$USER_LOCATION}",
+            //                "value": "0:0:0",
+            //                "description": "latitude, longitude and altitude coordinates"
+            //            }
+            //        ],
+            //        "inventory_mode": 0,
+            //        "inventory": {
+            //            "macaddress_a": "01234",
+            //            "macaddress_b": "56768"
+            //        }
+            //    },
+            //    "auth": "038e1d7b1735c6a5436ee9eae095879e",
+            //    "id": 1
+	    // let http_client = Client::new();
+            let http_client = ClientBuilder::new().danger_accept_invalid_certs(false).build().unwrap();
+            let client = ZabbixApiV6Client::new(http_client, DEFAULT_URL);
+            let session = client.get_auth_session(DEFAULT_ADMIN, DEFAULT_PASSWORD).unwrap();
+	    let filter: HashMap<String,String> = HashMap::new();
+	    let request = GetHostGroupsRequest {
+		output: ZABBIX_EXTEND_PROPERTY_VALUE.to_string(),
+		filter
+	    };
+	    let host_groups = client.get_host_groups(&session, &request).unwrap();
+	    let host_group = host_groups.first().unwrap().clone();
+	    let host_name = "test01.test.net".to_string();
+            let request = CreateHostRequest {
+                host: host_name,
+                groups: vec![host_group],
+                interfaces: vec![],
+                tags: vec![],
+                templates: vec![],
+                macros: vec![],
+                inventory_mode: 0,
+                inventory: Default::default(),
+            };
+	    
+//            match client.create_host(&session, &request).unwrap() {
+                Ok(client.create_host(&session, &request).unwrap()) => {
+                    println!("host.len()= {:?}",hosts.len());
+                    let host = hosts.first().unwrap();
+                    println!("host: {:?} created", host);
+                }
+                Err(e) => {
+                    eprintln!("host create error: {}", e);
+                    panic!("{}", e)
+                }
+//	    }	    
         } // create
 
         Some(("retrieve", sub_matches)) => {
