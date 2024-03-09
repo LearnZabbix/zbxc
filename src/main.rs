@@ -187,6 +187,8 @@ fn main() {
                 rectangle.height,
                 rectangle.area()
             );
+
+	    let _ = functions::untyped_example();
         } //delete
 
         Some(("check", sub_matches)) => {

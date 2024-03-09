@@ -20,4 +20,5 @@
 # References
 
 - https://www.shuttle.rs/blog/2024/02/15/bst-rust-tooling
+- https://www.shuttle.rs/blog/2024/01/18/parsing-json-rust
 
