@@ -113,7 +113,7 @@ args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 status:
 	git status && git branch
 commit:
-	git commit -am "$(call args, Automated commit message without details, Please read the git diff)"  && git push
+	git commit -am "$(call args,Automated commit without detail, Please read the git diff)"  && git push
 pull:
 	git pull
 install:
